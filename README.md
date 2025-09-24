@@ -7,7 +7,7 @@ A Next.js application that scrapes blog content and creates Zora coins from your
 [Pitch Deck](https://drive.google.com/file/d/1JLsH3cT1lfOh2xPnBSgKvs5fLqvkkkBY/view)
 
 [Demo Video](https://youtu.be/z1inJghlAW4)
-
+]
 ## Features
 
 - **Web Scraping**: Extract content from any blog URL (Medium, personal blogs, etc.)
