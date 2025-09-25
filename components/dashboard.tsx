@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -278,7 +278,8 @@ export default function Dashboard() {
 
         {/* Coins Tabs */}
         <Tabs defaultValue="all" className="space-y-4">
-          <TabsList className="grid w-full grid-cols-2">
+
+          <TabsList className="grid w-full grid-cols-7">
             <TabsTrigger value="all" className="flex items-center gap-2">
               <TrendingUp className="h-4 w-4" />
               All Coins ({stats.totalCoins})
@@ -287,9 +288,87 @@ export default function Dashboard() {
               <User className="h-4 w-4" />
               My Coins ({stats.userCoins})
             </TabsTrigger>
+            <TabsTrigger value="blog" className="flex items-center gap-2">
+              <FileText className="h-4 w-4" />
+              Create Coin from Blog
+            </TabsTrigger>
+            <TabsTrigger value="image" className="flex items-center gap-2">
+              <Coins className="h-4 w-4" />
+              Create Coin from Image
+            </TabsTrigger>
+            <TabsTrigger value="music" className="flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-2v13" /><circle cx="6" cy="18" r="3" /><circle cx="18" cy="16" r="3" /></svg>
+              Music
+            </TabsTrigger>
+            <TabsTrigger value="channels" className="flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><rect x="3" y="7" width="18" height="13" rx="2" /><path d="M16 3v4" /><path d="M8 3v4" /></svg>
+              Channels
+            </TabsTrigger>
           </TabsList>
+          <TabsContent value="music" className="space-y-4">
+            {/* Music Tab */}
+            <div className="flex flex-col items-center justify-center">
+              <h2 className="text-2xl font-semibold mb-2">Music</h2>
+              <p className="mb-4 text-gray-600 max-w-xl text-center">
+                Mint a coin from your favorite music or audio content. (Coming soon)
+              </p>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="channels" className="space-y-4">
+            {/* Channels Tab */}
+            <div className="flex flex-col items-center justify-center">
+              <h2 className="text-2xl font-semibold mb-2">Channels</h2>
+              <p className="mb-4 text-gray-600 max-w-xl text-center">
+                Create or explore channels for your coins and communities. (Coming soon)
+              </p>
+            </div>
+          </TabsContent>
+          <TabsContent value="blog" className="space-y-4">
+            {/* Create Coin from Blog Tab */}
+            <div className="flex flex-col items-center justify-center">
+              <h2 className="text-2xl font-semibold mb-2">Create Coin from Blog</h2>
+              <p className="mb-4 text-gray-600 max-w-xl text-center">
+                Scrape a blog post and create a Zora coin from your favorite content
+              </p>
+              <Card className="max-w-md w-full">
+                <CardHeader>
+                  <CardTitle>Blog URL</CardTitle>
+                  <CardDescription>Enter a blog post URL to get started</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <form className="flex flex-col gap-4">
+                    <Input type="url" placeholder="Blog Post URL" defaultValue="https://medium.com/@author/article-title" />
+                    <Button type="button" variant="default">
+                      Scrape Content
+                    </Button>
+                  </form>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
 
           <TabsContent value="all" className="space-y-4">
+          <TabsContent value="image" className="space-y-4">
+            {/* Create Coin from Image Tab */}
+            <div className="flex flex-col items-center justify-center">
+              <h2 className="text-2xl font-semibold mb-2">Create Coin from Image</h2>
+              <p className="mb-4 text-gray-600 max-w-xl text-center">
+                Upload an image (PNG, JPEG, SVG, AVIF, etc) and create a Zora coin from your favorite visual content.
+              </p>
+              <Card className="max-w-md w-full">
+                <CardHeader>
+                  <CardTitle>Image Upload</CardTitle>
+                  <CardDescription>Choose an image file to get started</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {/* CoinImageModal component for image upload and coin creation */}
+                  {/* @ts-expect-error Async Server Component */}
+                  {React.createElement(require('./coin-image-modal').default, { onCoinCreated: handleCoinCreated })}
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-semibold">All Coins</h2>
               <Badge variant="secondary">{filteredCoins.length} coins</Badge>
