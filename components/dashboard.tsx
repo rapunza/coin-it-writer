@@ -1,4 +1,6 @@
+
 'use client';
+import React from 'react';
 
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -6,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
-import { Loader2, Coins, TrendingUp, Users, User, Wallet, LogOut, Copy, Check, Search, Trash2 } from 'lucide-react';
+import { Loader2, Coins, TrendingUp, Users, User, Wallet, LogOut, Copy, Check, Search, Trash2, FileText } from 'lucide-react';
 import { useAccount } from 'wagmi';
 import { usePrivy, useLogout } from '@privy-io/react-auth';
 import CoinCreationModal from './coin-creation-modal';
@@ -28,6 +30,7 @@ export default function Dashboard() {
   const { address } = useAccount();
   const { user } = usePrivy();
   const { logout } = useLogout();
+  const [logoutError, setLogoutError] = useState<string | null>(null);
   const [userCoins, setUserCoins] = useState<CoinWithCreator[]>([]);
   const [allCoins, setAllCoins] = useState<CoinWithCreator[]>([]);
   const [filteredCoins, setFilteredCoins] = useState<CoinWithCreator[]>([]);
@@ -186,7 +189,7 @@ export default function Dashboard() {
         <div className="flex items-center justify-between">
           <div className="flex flex-col gap-2">
             <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-              CoinIt Launchpad
+              CoinIt
             </h1>
             <nav className="mt-2">
               <ul className="flex gap-6 text-base font-medium">
@@ -226,13 +229,26 @@ export default function Dashboard() {
                   </div>
                 )}
                 <Button
-                variant="outline"
-                onClick={logout}
-                className="flex items-center gap-2 hover:bg-red-50 hover:border-red-200 hover:text-red-600 transition-colors"
-              >
-                <LogOut className="h-4 w-4" />
-                Logout
-              </Button>
+                  variant="outline"
+                  onClick={async () => {
+                    setLogoutError(null);
+                    try {
+                      await logout();
+                      // Optionally, clear local user state or redirect
+                    } catch (err: any) {
+                      setLogoutError('Logout failed, but your session has been cleared locally.');
+                      // Optionally, clear local user state or redirect
+                      console.error('Logout error:', err);
+                    }
+                  }}
+                  className="flex items-center gap-2 hover:bg-red-50 hover:border-red-200 hover:text-red-600 transition-colors"
+                >
+                  <LogOut className="h-4 w-4" />
+                  Logout
+                </Button>
+                {logoutError && (
+                  <div className="text-red-600 text-xs mt-1">{logoutError}</div>
+                )}
               </div>
 
               <CoinCreationModal onCoinCreated={handleCoinCreated} />
@@ -246,7 +262,7 @@ export default function Dashboard() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-2 my-2">
           <Card className="p-2">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1 px-2">
-              <CardTitle className="text-xs font-semibold">Your Coins</CardTitle>
+              <CardTitle className="text-xs font-semibold">My Coins</CardTitle>
               <User className="h-3 w-3 text-muted-foreground" />
             </CardHeader>
             <CardContent className="py-1 px-2">
@@ -282,7 +298,7 @@ export default function Dashboard() {
           <TabsList className="grid w-full grid-cols-7">
             <TabsTrigger value="all" className="flex items-center gap-2">
               <TrendingUp className="h-4 w-4" />
-              All Coins ({stats.totalCoins})
+              Explore ({stats.totalCoins})
             </TabsTrigger>
             <TabsTrigger value="mine" className="flex items-center gap-2">
               <User className="h-4 w-4" />
@@ -294,7 +310,7 @@ export default function Dashboard() {
             </TabsTrigger>
             <TabsTrigger value="image" className="flex items-center gap-2">
               <Coins className="h-4 w-4" />
-              Create Coin from Image
+              Coin any image!
             </TabsTrigger>
             <TabsTrigger value="music" className="flex items-center gap-2">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-2v13" /><circle cx="6" cy="18" r="3" /><circle cx="18" cy="16" r="3" /></svg>
@@ -370,7 +386,7 @@ export default function Dashboard() {
             </div>
           </TabsContent>
             <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-semibold">All Coins</h2>
+              <h2 className="text-2xl font-semibold">Explore</h2>
               <Badge variant="secondary">{filteredCoins.length} coins</Badge>
             </div>
             
@@ -432,7 +448,7 @@ export default function Dashboard() {
                 </CardContent>
               </Card>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {filteredCoins.map((coin) => (
                   <div key={coin.id} className="relative">
                     <CoinCard 

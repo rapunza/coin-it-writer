@@ -1,6 +1,7 @@
 'use client';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+const GATEWAY_URL = process.env.NEXT_PUBLIC_GATEWAY_URL || 'yellow-patient-cheetah-559.mypinata.cloud';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -48,6 +49,10 @@ export default function CoinCard({ coin, isOwnCoin = false }: CoinCardProps) {
   const [copied, setCopied] = useState(false);
   const [tradeDialogOpen, setTradeDialogOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  // Fixed card size for uniformity
+  const CARD_WIDTH = 260;
+  const CARD_HEIGHT = 420;
   const [txHash, setTxHash] = useState<string | null>(null);
   const [, setError] = useState<string | null>(null);
   const [ethAmount, setEthAmount] = useState("0.0001");
@@ -144,112 +149,78 @@ export default function CoinCard({ coin, isOwnCoin = false }: CoinCardProps) {
   };
 
   return (
-    <Card className={`hover:shadow-lg transition-shadow ${isOwnCoin ? 'border-purple-200 bg-purple-50/50' : ''}`}>
-      <CardHeader className="pb-3">
-        <div className="flex items-start justify-between">
-          <div className="flex-1">
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <Coins className="h-5 w-5" />
-              {coin.name}
+    <Card
+      className={`hover:shadow-lg transition-shadow ${isOwnCoin ? 'border-purple-200 bg-purple-50/50' : ''}`}
+      style={{ width: CARD_WIDTH, height: CARD_HEIGHT, minWidth: CARD_WIDTH, minHeight: CARD_HEIGHT, maxWidth: CARD_WIDTH, maxHeight: CARD_HEIGHT, display: 'flex', flexDirection: 'column' }}
+    >
+      <CardHeader className="pb-2 px-3">
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex-1 min-w-0">
+            <CardTitle className="flex items-center gap-1 text-base font-semibold truncate">
+              <Coins className="h-4 w-4" />
+              <span className="truncate">{coin.name}</span>
               {isOwnCoin && (
-                <Badge variant="secondary" className="bg-purple-100 text-purple-800">
-                  Your Coin
-                </Badge>
+                <Badge variant="secondary" className="bg-purple-100 text-purple-800 ml-1">Your Coin</Badge>
               )}
             </CardTitle>
-            <CardDescription className="flex items-center gap-2 mt-1">
-              <span className="font-mono text-sm">${coin.symbol}</span>
-              <span>•</span>
-              <span>{formatAddress(coin.address)}</span>
+            <CardDescription className="flex items-center gap-1 mt-0.5 text-xs text-gray-500">
+              <span className="truncate">{formatAddress(coin.address)}</span>
             </CardDescription>
           </div>
-          
           <Button
             variant="outline"
-            size="sm"
+            size="icon"
             onClick={() => handleCopy(coin.address)}
-            className="ml-2"
+            className="ml-1 h-7 w-7"
           >
-            {copied ? (
-              <Check className="h-4 w-4" />
-            ) : (
-              <Copy className="h-4 w-4" />
-            )}
+            {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
           </Button>
         </div>
       </CardHeader>
 
-      <CardContent className="space-y-4">
-        {/* Coin Stats */}
-        <div className="flex gap-4 text-xs text-gray-700 mb-2 flex-wrap">
-          <div>
-            <span className="block font-semibold">Symbol</span>
-            <span>{coin.symbol}</span>
-          </div>
-          <div>
-            <span className="block font-semibold">Price (USDC)</span>
-            <span>{price !== null ? `$${price}` : '--'}</span>
-          </div>
-          <div>
-            <span className="block font-semibold">Market Cap</span>
-            <span>{marketCap !== null ? `$${marketCap}` : '--'}</span>
-          </div>
-          <div>
-            <span className="block font-semibold">Volume 24h</span>
-            <span>{volume24h !== null ? `$${volume24h}` : '--'}</span>
-          </div>
-          <div>
-            <span className="block font-semibold">Unique Holders</span>
-            <span>{uniqueHolders !== null ? uniqueHolders : '--'}</span>
-          </div>
-          <div>
-            <span className="block font-semibold">Created At</span>
-            <span>{formatDate(coin.createdAt)}</span>
-          </div>
+      <CardContent className="flex-1 flex flex-col gap-2 px-3 py-2">
+        {/* Compact Coin Stats */}
+        <div className="grid grid-cols-2 gap-x-2 gap-y-1 text-xs text-gray-700">
+          <div><span className="font-semibold">Price</span>: {price !== null ? `$${Number(price).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 6 })}` : '--'}</div>
+          <div><span className="font-semibold">MCap</span>: {marketCap !== null ? `$${marketCap}` : '--'}</div>
+          <div><span className="font-semibold">Vol 24h</span>: {volume24h !== null ? `$${volume24h}` : '--'}</div>
+          <div><span className="font-semibold">Holders</span>: {uniqueHolders !== null ? uniqueHolders : '--'}</div>
         </div>
-        <div className="text-xs text-gray-700 mb-2">
-          <span className="block font-semibold">Creator Earnings</span>
-          {creatorEarnings && creatorEarnings.length > 0 ? (
-            <ul className="list-disc ml-4">
-              {creatorEarnings.map((earning, idx) => (
-                <li key={idx}>
-                  {earning.amount.amountDecimal} ({earning.amount.currencyAddress})
-                  {earning.amountUsd ? ` ≈ $${earning.amountUsd}` : ''}
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <span>--</span>
-          )}
+        <div className="text-xs text-gray-700">
+          <span className="font-semibold">Earnings</span>: {creatorEarnings && creatorEarnings.length > 0 ? (
+            <span>{creatorEarnings[0].amount.amountDecimal} ({creatorEarnings[0].amount.currencyAddress}){creatorEarnings[0].amountUsd ? ` ≈ $${creatorEarnings[0].amountUsd}` : ''}</span>
+          ) : '--'}
         </div>
-        {/* Blog Metadata */}
+        {/* Blog Metadata (compact) */}
         {coin.metadata && (
-          <div className="space-y-3">
+          <div className="space-y-1">
             {coin.metadata.title && (
-              <div>
-                <h4 className="font-medium text-sm text-gray-700 mb-1">Original Blog Title</h4>
-                <p className="text-sm">{coin.metadata.title}</p>
-              </div>
+              <div className="truncate text-xs text-gray-800 font-medium">{coin.metadata.title}</div>
             )}
-
             {coin.metadata.description && (
-              <div>
-                <h4 className="font-medium text-sm text-gray-700 mb-1">Description</h4>
-                <p className="text-sm text-gray-600 line-clamp-3">{coin.metadata.description}</p>
-              </div>
+              <div className="truncate text-xs text-gray-500">{coin.metadata.description}</div>
             )}
-
             {coin.metadata.image && (
-              <div className="rounded-md overflow-hidden">
+              <div className="rounded-md overflow-hidden" style={{ width: '100%', height: 100 }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img 
-                  src={coin.metadata.image} 
+                <img
+                  src={(() => {
+                    if (!coin.metadata.image.startsWith('ipfs://')) return coin.metadata.image;
+                    const hash = coin.metadata.image.replace('ipfs://', '');
+                    return `https://ipfs.zora.co/ipfs/${hash}`;
+                  })()}
                   alt={coin.metadata.title || coin.name}
-                  width={500}
-                  height={128}
-                  className="w-full h-32 object-cover"
-                  onError={(e) => {
-                    e.currentTarget.style.display = 'none';
+                  width={CARD_WIDTH}
+                  height={100}
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  onError={e => {
+                    // Log error details for debugging
+                    // eslint-disable-next-line no-console
+                    console.error('CoinCard image failed to load:', {
+                      src: e.currentTarget.src,
+                      alt: e.currentTarget.alt,
+                      coin,
+                    });
                   }}
                 />
               </div>
@@ -257,143 +228,110 @@ export default function CoinCard({ coin, isOwnCoin = false }: CoinCardProps) {
           </div>
         )}
 
-        {/* Coin Details */}
-        <div className="space-y-2 pt-2 border-t border-gray-100">
-          <div className="flex items-center justify-between text-sm">
-            <div className="flex items-center gap-2 text-gray-600">
-              <User className="h-4 w-4" />
-              <span>Creator</span>
-            </div>
-            <span className="font-mono">{formatAddress(coin.creator)}</span>
+        {/* Coin Details (compact) */}
+        <div className="flex items-center justify-between text-xs pt-1 border-t border-gray-100 mt-1">
+          <div className="flex items-center gap-1 text-gray-600">
+            <User className="h-3 w-3" />
+            <span>Creator</span>
           </div>
-
-          <div className="flex items-center justify-between text-sm">
-            <div className="flex items-center gap-2 text-gray-600">
-              <Calendar className="h-4 w-4" />
-              <span>Created</span>
-            </div>
-            <span>{formatDate(coin.createdAt)}</span>
+          <span className="font-mono">{formatAddress(coin.creator)}</span>
+        </div>
+        <div className="flex items-center justify-between text-xs">
+          <div className="flex items-center gap-1 text-gray-600">
+            <span className="font-semibold">Symbol</span>: {coin.symbol}
+          </div>
+          <div className="flex items-center gap-1 text-gray-600">
+            <Calendar className="h-3 w-3" />
+            <span>Created</span>: {formatDate(coin.createdAt)}
           </div>
         </div>
 
-        {/* Actions */}
-        <div className="flex gap-2 pt-2">
-          {coin.metadata?.originalUrl && (
-            <Button variant="outline" size="sm" asChild className="flex-1">
-              <a href={coin.metadata.originalUrl} target="_blank" rel="noopener noreferrer">
-                <ExternalLink className="h-4 w-4 mr-1" />
-                View Blog
-              </a>
-            </Button>
-          )}
-          
+        {/* Actions (compact) */}
+        <div className="flex gap-1 pt-1">
           {coin.ipfsUri && (
-            <Button variant="outline" size="sm" asChild className="flex-1">
+            <Button variant="outline" size="xs" asChild className="flex-1 px-1 py-1 text-xs h-7">
               <a href={coin.ipfsUri} target="_blank" rel="noopener noreferrer">
-                <ExternalLink className="h-4 w-4 mr-1" />
-                View Metadata
+                <ExternalLink className="h-3 w-3 mr-1" />
+                Metadata
               </a>
             </Button>
           )}
-
           {!isOwnCoin && (
             <Dialog open={tradeDialogOpen} onOpenChange={setTradeDialogOpen}>
               <DialogTrigger asChild>
-                <Button variant="default" size="sm" className="flex-1">
-                  <TrendingUp className="h-4 w-4 mr-1" />
+                <Button variant="default" size="xs" className="flex-1 px-1 py-1 text-xs h-7">
+                  <TrendingUp className="h-3 w-3 mr-1" />
                   Trade
                 </Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-md">
+              <DialogContent className="sm:max-w-xs p-3">
                 <DialogHeader>
-                  <DialogTitle className="flex items-center gap-2">
-                    <TrendingUp className="h-5 w-5" />
+                  <DialogTitle className="flex items-center gap-2 text-sm">
+                    <TrendingUp className="h-4 w-4" />
                     Trade {coin.symbol}
                   </DialogTitle>
                 </DialogHeader>
-                <div className="space-y-4">
-                  <div className="p-4 bg-gray-50 rounded-lg">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium">Coin Details</span>
+                <div className="space-y-2">
+                  <div className="p-2 bg-gray-50 rounded-lg">
+                    <div className="flex items-center justify-between mb-1 text-xs">
+                      <span className="font-medium">Coin</span>
+                      <span>{coin.name}</span>
                     </div>
-                    <div className="space-y-1 text-sm">
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Name:</span>
-                        <span>{coin.name}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Symbol:</span>
-                        <span>${coin.symbol}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Address:</span>
-                        <span className="font-mono text-xs">{formatAddress(coin.address)}</span>
-                      </div>
+                    <div className="flex items-center justify-between mb-1 text-xs">
+                      <span className="font-medium">Symbol</span>
+                      <span>${coin.symbol}</span>
+                    </div>
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="font-medium">Address</span>
+                      <span className="font-mono">{formatAddress(coin.address)}</span>
                     </div>
                   </div>
-
-                  <div className="space-y-4">
-                    <div>
-                      <Label htmlFor="ethAmount" className="text-sm font-medium">
-                        ETH Amount to Trade
-                      </Label>
-                      <Input
-                        id="ethAmount"
-                        type="number"
-                        step="0.0001"
-                        min="0"
-                        value={ethAmount}
-                        onChange={(e) => setEthAmount(e.target.value)}
-                        placeholder="Enter ETH amount"
-                        className="mt-1"
-                      />
+                  <div>
+                    <Label htmlFor="ethAmount" className="text-xs font-medium">
+                      ETH to Trade
+                    </Label>
+                    <Input
+                      id="ethAmount"
+                      type="number"
+                      step="0.0001"
+                      min="0"
+                      value={ethAmount}
+                      onChange={(e) => setEthAmount(e.target.value)}
+                      placeholder="ETH amount"
+                      className="mt-1 text-xs h-7"
+                    />
+                  </div>
+                  <div className="p-2 bg-blue-50 rounded-lg text-xs">
+                    <div className="flex justify-between mb-1">
+                      <span>You pay:</span>
+                      <span>{ethAmount} ETH</span>
+                    </div>
+                    <div className="flex justify-between mb-1">
+                      <span>You receive:</span>
+                      <span>${coin.symbol} tokens</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Slippage:</span>
+                      <span>5%</span>
                     </div>
                   </div>
-
-                  <div className="p-4 bg-blue-50 rounded-lg">
-                    <div className="text-sm font-medium mb-2">Trade Details</div>
-                    <div className="space-y-1 text-sm">
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">You pay:</span>
-                        <span>{ethAmount} ETH</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">You receive:</span>
-                        <span>${coin.symbol} tokens</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Slippage:</span>
-                        <span>5%</span>
-                      </div>
-                    </div>
-                  </div>
-
-              
-
                   {!ready || !wallets[0] ? (
-                    <div className="p-4 bg-yellow-50 rounded-lg">
-                      <p className="text-sm text-yellow-800">
-                        Please log in with Privy to continue trading.
-                      </p>
+                    <div className="p-2 bg-yellow-50 rounded-lg text-xs">
+                      <p className="text-yellow-800">Please log in with Privy to trade.</p>
                     </div>
                   ) : (
                     <Button 
                       onClick={() => handleTrade(coin.address as `0x${string}`)}
                       disabled={loading || !ethAmount || parseFloat(ethAmount) <= 0}
-                      className="w-full"
+                      className="w-full text-xs h-7"
                     >
                       {loading ? "Trading..." : `Trade ${ethAmount} ETH`}
                     </Button>
                   )}
-
                   {txHash && (
-                    <div className="p-4 bg-green-50 rounded-lg">
-                      <p className="text-sm text-green-800">
-                        ✅ Transaction successful!
-                      </p>
-                      <p className="text-xs text-green-700 mt-1 font-mono break-all">
-                        {txHash}
-                      </p>
+                    <div className="p-2 bg-green-50 rounded-lg text-xs">
+                      <p className="text-green-800">✅ Success!</p>
+                      <p className="font-mono break-all">{txHash}</p>
                     </div>
                   )}
                 </div>
