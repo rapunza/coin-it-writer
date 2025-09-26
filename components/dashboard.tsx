@@ -11,7 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Loader2, Coins, TrendingUp, Users, User, Wallet, LogOut, Copy, Check, Search, Trash2, FileText } from 'lucide-react';
 import { useAccount } from 'wagmi';
 import { usePrivy, useLogout } from '@privy-io/react-auth';
-import CoinCreationModal from './coin-creation-modal';
+// import CoinCreationModal from './coin-creation-modal';
 import CoinCard from './coin-card';
 import { 
   getAllCoins, 
@@ -183,83 +183,10 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 p-4">
-      <div className="max-w-7xl mx-auto space-y-6">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div className="flex flex-col gap-2">
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-              CoinIt
-            </h1>
-            <nav className="mt-2">
-              <ul className="flex gap-6 text-base font-medium">
-                <li><a href="/" className="hover:text-purple-700 transition-colors">Explore</a></li>
-                <li><a href="/creators" className="hover:text-purple-700 transition-colors">Creators</a></li>
-                <li><a href="/channels" className="hover:text-purple-700 transition-colors">Channels</a></li>
-                <li><a href="/leaderboard" className="hover:text-purple-700 transition-colors">Leaderboard</a></li>
-              </ul>
-            </nav>
-            {/* Notice removed: all users can now see the site without connecting their wallet */}
-          </div>
-
-          <div className="flex items-center gap-4">
-            {/* User Connection Status */}
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2 bg-white rounded-lg p-3 border shadow-sm">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                  <span className="text-sm font-medium">Connected</span>
-                </div>
-                {address && (
-                  <div className="flex items-center gap-2 ml-3 pl-3 border-l">
-                    <Wallet className="h-4 w-4 text-gray-500" />
-                    <span className="text-sm font-mono">{formatAddress(address)}</span>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={handleCopyAddress}
-                      className="h-6 w-6 p-0 hover:bg-gray-100"
-                    >
-                      {copied ? (
-                        <Check className="h-3 w-3 text-green-500" />
-                      ) : (
-                        <Copy className="h-3 w-3" />
-                      )}
-                    </Button>
-                  </div>
-                )}
-                <Button
-                  variant="outline"
-                  onClick={async () => {
-                    setLogoutError(null);
-                    try {
-                      await logout();
-                      // Optionally, clear local user state or redirect
-                    } catch (err: any) {
-                      setLogoutError('Logout failed, but your session has been cleared locally.');
-                      // Optionally, clear local user state or redirect
-                      console.error('Logout error:', err);
-                    }
-                  }}
-                  className="flex items-center gap-2 hover:bg-red-50 hover:border-red-200 hover:text-red-600 transition-colors"
-                >
-                  <LogOut className="h-4 w-4" />
-                  Logout
-                </Button>
-                {logoutError && (
-                  <div className="text-red-600 text-xs mt-1">{logoutError}</div>
-                )}
-              </div>
-
-              <CoinCreationModal onCoinCreated={handleCoinCreated} />
-              
-              
-            </div>
-          </div>
-        </div>
-
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-2 my-2">
+  <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 p-4">
+    <div className="max-w-7xl mx-auto space-y-6 px-2 sm:px-4 md:px-8">
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-2 my-2">
           <Card className="p-2">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1 px-2">
               <CardTitle className="text-xs font-semibold">My Coins</CardTitle>
@@ -293,98 +220,189 @@ export default function Dashboard() {
         </div>
 
         {/* Coins Tabs */}
-        <Tabs defaultValue="all" className="space-y-4">
-
-          <TabsList className="grid w-full grid-cols-7">
-            <TabsTrigger value="all" className="flex items-center gap-2">
-              <TrendingUp className="h-4 w-4" />
-              Explore ({stats.totalCoins})
-            </TabsTrigger>
-            <TabsTrigger value="mine" className="flex items-center gap-2">
-              <User className="h-4 w-4" />
-              My Coins ({stats.userCoins})
-            </TabsTrigger>
+        <Tabs defaultValue="blog" className="space-y-4">
+          <TabsList
+            className="w-full flex overflow-x-auto no-scrollbar gap-2 sm:gap-4 px-1 sm:px-0"
+            style={{ WebkitOverflowScrolling: 'touch' }}
+          >
             <TabsTrigger value="blog" className="flex items-center gap-2">
               <FileText className="h-4 w-4" />
-              Create Coin from Blog
+              PublicGoods
             </TabsTrigger>
             <TabsTrigger value="image" className="flex items-center gap-2">
               <Coins className="h-4 w-4" />
-              Coin any image!
+              ImageCoins
             </TabsTrigger>
             <TabsTrigger value="music" className="flex items-center gap-2">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-2v13" /><circle cx="6" cy="18" r="3" /><circle cx="18" cy="16" r="3" /></svg>
-              Music
+              MusicCoins
+            </TabsTrigger>
+            <TabsTrigger value="video" className="flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><rect x="3" y="7" width="18" height="13" rx="2" /><path d="M16 3v4" /><path d="M8 3v4" /></svg>
+              VideoCoins
             </TabsTrigger>
             <TabsTrigger value="channels" className="flex items-center gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><rect x="3" y="7" width="18" height="13" rx="2" /><path d="M16 3v4" /><path d="M8 3v4" /></svg>
+              <TrendingUp className="h-4 w-4" />
               Channels
             </TabsTrigger>
-          </TabsList>
-          <TabsContent value="music" className="space-y-4">
-            {/* Music Tab */}
-            <div className="flex flex-col items-center justify-center">
-              <h2 className="text-2xl font-semibold mb-2">Music</h2>
-              <p className="mb-4 text-gray-600 max-w-xl text-center">
-                Mint a coin from your favorite music or audio content. (Coming soon)
-              </p>
-            </div>
-          </TabsContent>
-
           <TabsContent value="channels" className="space-y-4">
-            {/* Channels Tab */}
-            <div className="flex flex-col items-center justify-center">
-              <h2 className="text-2xl font-semibold mb-2">Channels</h2>
-              <p className="mb-4 text-gray-600 max-w-xl text-center">
-                Create or explore channels for your coins and communities. (Coming soon)
-              </p>
+            <div className="flex items-center justify-between">
+              <h2 className="text-2xl font-semibold">Channels</h2>
+              <Badge variant="secondary">Coming soon</Badge>
+            </div>
+            <div className="text-gray-500">Channel coins and features will appear here.</div>
+          </TabsContent>
+          </TabsList>
+          <TabsContent value="blog" className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-2xl font-semibold">Blog Coins</h2>
+              <Badge variant="secondary">{filteredCoins.filter(c => (c.metadata && 'type' in c.metadata && (c.metadata as any).type === 'blog')).length} coins</Badge>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {filteredCoins.filter(c => (c.metadata && 'type' in c.metadata && (c.metadata as any).type === 'blog')).map((coin) => (
+                <div key={coin.id} className="relative">
+                  <CoinCard 
+                    coin={{
+                      id: coin.id,
+                      name: coin.name,
+                      symbol: coin.symbol,
+                      address: coin.coin_address,
+                      creator: coin.creator_wallet,
+                      createdAt: coin.created_at,
+                      metadata: coin.metadata,
+                      ipfsUri: coin.ipfs_uri,
+                    }}
+                    isOwnCoin={coin.creator_wallet.toLowerCase() === address?.toLowerCase()}
+                  />
+                  {coin.creator_wallet.toLowerCase() === address?.toLowerCase() && (
+                    <div className="absolute top-2 right-2 flex gap-1 opacity-0 hover:opacity-100 transition-opacity">
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => handleDeleteCoin(coin.id)}
+                        className="h-8 w-8 p-0 bg-red-500 hover:bg-red-600 text-white"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
           </TabsContent>
-          <TabsContent value="blog" className="space-y-4">
-            {/* Create Coin from Blog Tab */}
-            <div className="flex flex-col items-center justify-center">
-              <h2 className="text-2xl font-semibold mb-2">Create Coin from Blog</h2>
-              <p className="mb-4 text-gray-600 max-w-xl text-center">
-                Scrape a blog post and create a Zora coin from your favorite content
-              </p>
-              <Card className="max-w-md w-full">
-                <CardHeader>
-                  <CardTitle>Blog URL</CardTitle>
-                  <CardDescription>Enter a blog post URL to get started</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <form className="flex flex-col gap-4">
-                    <Input type="url" placeholder="Blog Post URL" defaultValue="https://medium.com/@author/article-title" />
-                    <Button type="button" variant="default">
-                      Scrape Content
-                    </Button>
-                  </form>
-                </CardContent>
-              </Card>
+          <TabsContent value="image" className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-2xl font-semibold">Image Coins</h2>
+              <Badge variant="secondary">{filteredCoins.filter(c => (c.metadata && 'type' in c.metadata && (c.metadata as any).type === 'image')).length} coins</Badge>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {filteredCoins.filter(c => (c.metadata && 'type' in c.metadata && (c.metadata as any).type === 'image')).map((coin) => (
+                <div key={coin.id} className="relative">
+                  <CoinCard 
+                    coin={{
+                      id: coin.id,
+                      name: coin.name,
+                      symbol: coin.symbol,
+                      address: coin.coin_address,
+                      creator: coin.creator_wallet,
+                      createdAt: coin.created_at,
+                      metadata: coin.metadata,
+                      ipfsUri: coin.ipfs_uri,
+                    }}
+                    isOwnCoin={coin.creator_wallet.toLowerCase() === address?.toLowerCase()}
+                  />
+                  {coin.creator_wallet.toLowerCase() === address?.toLowerCase() && (
+                    <div className="absolute top-2 right-2 flex gap-1 opacity-0 hover:opacity-100 transition-opacity">
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => handleDeleteCoin(coin.id)}
+                        className="h-8 w-8 p-0 bg-red-500 hover:bg-red-600 text-white"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </TabsContent>
+          <TabsContent value="music" className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-2xl font-semibold">Music Coins</h2>
+              <Badge variant="secondary">{filteredCoins.filter(c => (c.metadata && 'type' in c.metadata && (c.metadata as any).type === 'music')).length} coins</Badge>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {filteredCoins.filter(c => (c.metadata && 'type' in c.metadata && (c.metadata as any).type === 'music')).map((coin) => (
+                <div key={coin.id} className="relative">
+                  <CoinCard 
+                    coin={{
+                      id: coin.id,
+                      name: coin.name,
+                      symbol: coin.symbol,
+                      address: coin.coin_address,
+                      creator: coin.creator_wallet,
+                      createdAt: coin.created_at,
+                      metadata: coin.metadata,
+                      ipfsUri: coin.ipfs_uri,
+                    }}
+                    isOwnCoin={coin.creator_wallet.toLowerCase() === address?.toLowerCase()}
+                  />
+                  {coin.creator_wallet.toLowerCase() === address?.toLowerCase() && (
+                    <div className="absolute top-2 right-2 flex gap-1 opacity-0 hover:opacity-100 transition-opacity">
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => handleDeleteCoin(coin.id)}
+                        className="h-8 w-8 p-0 bg-red-500 hover:bg-red-600 text-white"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </TabsContent>
+          <TabsContent value="video" className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-2xl font-semibold">Video Coins</h2>
+              <Badge variant="secondary">{filteredCoins.filter(c => (c.metadata && 'type' in c.metadata && (c.metadata as any).type === 'video')).length} coins</Badge>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {filteredCoins.filter(c => (c.metadata && 'type' in c.metadata && (c.metadata as any).type === 'video')).map((coin) => (
+                <div key={coin.id} className="relative">
+                  <CoinCard 
+                    coin={{
+                      id: coin.id,
+                      name: coin.name,
+                      symbol: coin.symbol,
+                      address: coin.coin_address,
+                      creator: coin.creator_wallet,
+                      createdAt: coin.created_at,
+                      metadata: coin.metadata,
+                      ipfsUri: coin.ipfs_uri,
+                    }}
+                    isOwnCoin={coin.creator_wallet.toLowerCase() === address?.toLowerCase()}
+                  />
+                  {coin.creator_wallet.toLowerCase() === address?.toLowerCase() && (
+                    <div className="absolute top-2 right-2 flex gap-1 opacity-0 hover:opacity-100 transition-opacity">
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => handleDeleteCoin(coin.id)}
+                        className="h-8 w-8 p-0 bg-red-500 hover:bg-red-600 text-white"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
           </TabsContent>
 
           <TabsContent value="all" className="space-y-4">
-          <TabsContent value="image" className="space-y-4">
-            {/* Create Coin from Image Tab */}
-            <div className="flex flex-col items-center justify-center">
-              <h2 className="text-2xl font-semibold mb-2">Create Coin from Image</h2>
-              <p className="mb-4 text-gray-600 max-w-xl text-center">
-                Upload an image (PNG, JPEG, SVG, AVIF, etc) and create a Zora coin from your favorite visual content.
-              </p>
-              <Card className="max-w-md w-full">
-                <CardHeader>
-                  <CardTitle>Image Upload</CardTitle>
-                  <CardDescription>Choose an image file to get started</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  {/* CoinImageModal component for image upload and coin creation */}
-                  {/* @ts-expect-error Async Server Component */}
-                  {React.createElement(require('./coin-image-modal').default, { onCoinCreated: handleCoinCreated })}
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-semibold">Explore</h2>
               <Badge variant="secondary">{filteredCoins.length} coins</Badge>
@@ -428,7 +446,7 @@ export default function Dashboard() {
                   <p className="text-gray-500 text-center mb-4">
                     Create your coin and start earning!
                   </p>
-                  <CoinCreationModal onCoinCreated={handleCoinCreated} />
+                  {/* CoinCreationModal removed: now in global header */}
                 </CardContent>
               </Card>
             ) : filteredCoins.length === 0 && searchTerm ? (
@@ -496,7 +514,7 @@ export default function Dashboard() {
                   <p className="text-gray-500 text-center mb-4">
                     Start by creating your first coin from a blog post!
                   </p>
-                  <CoinCreationModal onCoinCreated={handleCoinCreated} />
+                  {/* CoinCreationModal removed: now in global header */}
                 </CardContent>
               </Card>
             ) : (

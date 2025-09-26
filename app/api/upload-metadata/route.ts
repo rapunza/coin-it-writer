@@ -1,6 +1,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { pinata } from '@/lib/pinata';
+import { notifyTelegramEvent } from '@/lib/telegram-events';
 
 export async function POST(request: NextRequest) {
   try {
@@ -42,6 +43,28 @@ export async function POST(request: NextRequest) {
       const { cid } = await pinata.upload.public.file(metaFile);
       const gatewayUrl = await pinata.gateways.public.convert(cid);
 
+      // Notify Telegram about new image coin
+      try {
+        await notifyTelegramEvent({
+          type: "NEW_COIN",
+          data: {
+            name,
+            symbol,
+            marketCap: "?", // Fill with actual value if available
+            totalSupply: "?", // Fill with actual value if available
+            creator: "?", // Fill with actual value if available
+            createdAt: new Date().toISOString(),
+            contract: "?", // Fill with actual value if available
+            description: metadata.description,
+            image: imageGatewayUrl,
+            zoraUrl: "?",
+            baseScanUrl: "?",
+            dexScreenerUrl: "?",
+          },
+        });
+      } catch (e) {
+        console.error('Telegram notification failed:', e);
+      }
       return NextResponse.json({
         ipfsHash: cid,
         ipfsUri: `ipfs://${cid}`,
@@ -94,6 +117,28 @@ export async function POST(request: NextRequest) {
     });
     const { cid } = await pinata.upload.public.file(file);
     const gatewayUrl = await pinata.gateways.public.convert(cid);
+    // Notify Telegram about new blog coin
+    try {
+      await notifyTelegramEvent({
+        type: "NEW_COIN",
+        data: {
+          name: metadata.name,
+          symbol: blogData.symbol || "?",
+          marketCap: "?",
+          totalSupply: "?",
+          creator: blogData.creator || "?",
+          createdAt: new Date().toISOString(),
+          contract: blogData.contract || "?",
+          description: metadata.description,
+          image: metadata.image,
+          zoraUrl: blogData.zoraUrl || "?",
+          baseScanUrl: blogData.baseScanUrl || "?",
+          dexScreenerUrl: blogData.dexScreenerUrl || "?",
+        },
+      });
+    } catch (e) {
+      console.error('Telegram notification failed:', e);
+    }
     return NextResponse.json({
       ipfsHash: cid,
       ipfsUri: `ipfs://${cid}`,

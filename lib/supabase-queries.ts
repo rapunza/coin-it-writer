@@ -1,4 +1,5 @@
 import { supabase } from './supabase';
+import { notifyTelegramEvent } from './telegram-events';
 
 export interface User {
   wallet_address: string;
@@ -95,6 +96,29 @@ export async function createCoin(coinData: CreateCoinData) {
     throw error;
   }
 
+  // Notify Telegram about new coin
+  try {
+    await notifyTelegramEvent({
+      type: "NEW_COIN",
+      data: {
+        name: coinData.name,
+        symbol: coinData.symbol,
+        marketCap: coinData.metadata?.marketCap || "?",
+        totalSupply: coinData.metadata?.totalSupply || "?",
+        creator: coinData.creator_wallet,
+        createdAt: data?.created_at || new Date().toISOString(),
+        contract: coinData.coin_address,
+        description: coinData.metadata?.description || "",
+        image: coinData.metadata?.image || "",
+        zoraUrl: coinData.metadata?.zoraUrl || "?",
+        baseScanUrl: coinData.metadata?.baseScanUrl || "?",
+        dexScreenerUrl: coinData.metadata?.dexScreenerUrl || "?",
+      },
+    });
+  } catch (e) {
+    console.error('Telegram notification failed:', e);
+  }
+
   return data as Coin;
 }
 
@@ -157,6 +181,30 @@ export async function updateCoin(coinId: string, updates: Partial<Coin>) {
     throw error;
   }
 
+  // Notify Telegram about coin update (trading activity)
+  try {
+    await notifyTelegramEvent({
+      type: "TRADING",
+      data: {
+        name: data?.name,
+        symbol: data?.symbol,
+        marketCap: data?.metadata?.marketCap || "?",
+        volume24h: data?.metadata?.volume24h || "?",
+        totalSupply: data?.metadata?.totalSupply || "?",
+        holders: data?.metadata?.holders || "?",
+        creator: data?.creator_wallet,
+        contract: data?.coin_address,
+        createdAt: data?.created_at,
+        activityAt: data?.updated_at,
+        zoraUrl: data?.metadata?.zoraUrl || "?",
+        baseScanUrl: data?.metadata?.baseScanUrl || "?",
+        dexScreenerUrl: data?.metadata?.dexScreenerUrl || "?",
+      },
+    });
+  } catch (e) {
+    console.error('Telegram notification failed:', e);
+  }
+
   return data as Coin;
 }
 
@@ -170,7 +218,10 @@ export async function deleteCoin(coinId: string) {
     console.error('Error deleting coin:', error);
     throw error;
   }
+
+  // Optionally notify Telegram about coin deletion
 }
+
 
 // Stats functions
 export async function getCoinStats() {
@@ -217,4 +268,4 @@ export async function getUserCoinStats(walletAddress: string) {
   return {
     userCoins: data?.length || 0,
   };
-} 
+}

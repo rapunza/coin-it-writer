@@ -1,7 +1,11 @@
+import MobileFooter from '@/components/mobile-footer';
+import ConnectedLogoutUI from '@/components/connected-logout-ui';
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import "./poppins.css";
 import Providers from "@/components/providers";
+import CoinCreationModal from "@/components/coin-creation-modal";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,8 +33,33 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Providers>
-        {children}
-        </Providers>
+          {/* Global Header with Main Menu */}
+          <header className="w-full border-b bg-white/80 backdrop-blur sticky top-0 z-30">
+            <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between py-4 px-4 sm:px-6 gap-2 sm:gap-0">
+              <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-6 w-full sm:w-auto">
+                <a href="/" className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">CoinIt</a>
+                <nav className="w-full sm:w-auto">
+                  <ul className="flex flex-wrap gap-2 sm:gap-6 text-base font-medium justify-center sm:justify-start">
+                    <li><a href="/" className="hover:text-purple-700 transition-colors">🌐 Explore</a></li>
+                    <li><a href="/creators" className="hover:text-purple-700 transition-colors">🧑‍🎨 Creators</a></li>
+                    <li><a href="/channels" className="hover:text-purple-700 transition-colors">#️⃣ Channels</a></li>
+                    <li><a href="/leaderboard" className="hover:text-purple-700 transition-colors">🏆 Leaderboard</a></li>
+                    <li><a href="/coin-analyzer" className="hover:text-purple-700 transition-colors">🪙 Coin Analyzer</a></li>
+                  </ul>
+                </nav>
+              </div>
+              <div className="flex items-center gap-2 sm:gap-4 mt-2 sm:mt-0 w-full sm:w-auto justify-center sm:justify-end">
+                <ConnectedLogoutUI />
+                <CoinCreationModal />
+              </div>
+            </div>
+          </header>
+          {/* Main Content */}
+          <main className="min-h-[calc(100vh-64px)] w-full px-2 sm:px-4 md:px-8">
+            {children}
+          </main>
+  <MobileFooter />
+  </Providers>
       </body>
     </html>
   );
