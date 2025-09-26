@@ -22,7 +22,7 @@ export default function ConnectedLogoutUI() {
     <div className="flex flex-col sm:flex-row items-center gap-2 bg-white rounded-lg p-2 border shadow-sm w-full sm:w-auto">
       <div className="flex items-center gap-2">
         <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-        <span className="text-sm font-medium">Connected</span>
+        <span className="text-sm font-medium"></span>
       </div>
       {address && (
         <div className="flex items-center gap-2 ml-3 pl-3 border-l">
@@ -56,7 +56,6 @@ export default function ConnectedLogoutUI() {
         className="flex items-center gap-2 hover:bg-red-50 hover:border-red-200 hover:text-red-600 transition-colors"
       >
         <LogOut className="h-4 w-4" />
-        Logout
       </Button>
       {logoutError && (
         <div className="text-red-600 text-xs mt-1">{logoutError}</div>

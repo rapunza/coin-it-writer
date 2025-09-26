@@ -184,7 +184,7 @@ export default function Dashboard() {
 
   return (
   <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 p-4">
-    <div className="max-w-7xl mx-auto space-y-6 px-2 sm:px-4 md:px-8">
+    <div className="max-w-4xl mx-auto space-y-6 px-2 sm:px-4 md:px-8">
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-2 my-2">
           <Card className="p-2">
@@ -230,7 +230,7 @@ export default function Dashboard() {
               PublicGoods
             </TabsTrigger>
             <TabsTrigger value="image" className="flex items-center gap-2">
-              <Coins className="h-4 w-4" />
+              <Coins className="h-4 w-4" />   
               ImageCoins
             </TabsTrigger>
             <TabsTrigger value="music" className="flex items-center gap-2">
@@ -255,7 +255,7 @@ export default function Dashboard() {
           </TabsList>
           <TabsContent value="blog" className="space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-semibold">Blog Coins</h2>
+              <h2 className="text-2xl font-semibold">Publi Goods</h2>
               <Badge variant="secondary">{filteredCoins.filter(c => (c.metadata && 'type' in c.metadata && (c.metadata as any).type === 'blog')).length} coins</Badge>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -512,7 +512,7 @@ export default function Dashboard() {
                   <User className="h-12 w-12 text-gray-400 mb-4" />
                   <h3 className="text-lg font-medium text-gray-600 mb-2">You haven&apos;t created any coins yet</h3>
                   <p className="text-gray-500 text-center mb-4">
-                    Start by creating your first coin from a blog post!
+                    Launch a coin to get started!
                   </p>
                   {/* CoinCreationModal removed: now in global header */}
                 </CardContent>

@@ -134,14 +134,14 @@ function CoinCreationModal({ onCoinCreated }: CoinCreationModalProps) {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Coins className="h-6 w-6" />
-              Create a Coin
+              Launch a Coin
             </DialogTitle>
             <DialogDescription>
-              Choose a method to create your Zora coin
+              Choose a coin type and get started!
             </DialogDescription>
           </DialogHeader>
           <TabsList className="grid w-full grid-cols-3 mb-4">
-            <TabsTrigger value="blog">Blog</TabsTrigger>
+            <TabsTrigger value="blog">Public Goods</TabsTrigger>
             <TabsTrigger value="image">Image</TabsTrigger>
             <TabsTrigger value="music">Music</TabsTrigger>
           </TabsList>
@@ -151,17 +151,17 @@ function CoinCreationModal({ onCoinCreated }: CoinCreationModalProps) {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <LinkIcon className="h-5 w-5" />
-                  Blog URL
+                  Project URL
                 </CardTitle>
                 <CardDescription>
-                  Enter a blog post URL to get started
+                  Enter your project URL to get started
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Blog Post URL</label>
+                  <label className="text-sm font-medium">Project URL</label>
                   <Input
-                    placeholder="https://medium.com/@author/article-title"
+                    placeholder="https://gitcoin.com/project-link"
                     value={url}
                     onChange={e => setUrl(e.target.value)}
                     className="w-full"
@@ -176,12 +176,12 @@ function CoinCreationModal({ onCoinCreated }: CoinCreationModalProps) {
                     {isLoading ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Scraping...
+                        Submitting...
                       </>
                     ) : (
                       <>
                         <FileText className="mr-2 h-4 w-4" />
-                        Scrape Content
+                        Submit project
                       </>
                     )}
                   </Button>
@@ -199,7 +199,7 @@ function CoinCreationModal({ onCoinCreated }: CoinCreationModalProps) {
                   Create Coin from Image
                 </CardTitle>
                 <CardDescription>
-                  Upload an image and create a Zora coin
+                  Upload an image and launch a new coin.
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -352,7 +352,7 @@ function CoinCreationModal({ onCoinCreated }: CoinCreationModalProps) {
                   Create Coin from Music
                 </CardTitle>
                 <CardDescription>
-                  Upload a music file (mp3, midi, wav, aiff, aac, aviff, mpeg) and create a Zora coin
+                  Upload a music file (mp3, midi, wav, aiff, aac, aviff, mpeg) and launch a coin.
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
