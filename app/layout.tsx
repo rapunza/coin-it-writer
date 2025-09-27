@@ -39,7 +39,7 @@ export default function RootLayout({
               <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-6 w-full sm:w-auto">
                 <a href="/" className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">CoinIt</a>
                 <nav className="w-full sm:w-auto">
-                  <ul className="flex flex-wrap gap-2 sm:gap-6 text-base font-medium justify-center sm:justify-start">
+                  <ul className="flex flex-wrap gap-2 sm:gap-6 text-sm font-medium justify-center sm:justify-start">
                     <li><a href="/" className="hover:text-purple-700 transition-colors">🌐 Explore</a></li>
                     <li><a href="/creators" className="hover:text-purple-700 transition-colors">🧑‍🎨 Creators</a></li>
                     <li><a href="/channels" className="hover:text-purple-700 transition-colors">#️⃣ Channels</a></li>

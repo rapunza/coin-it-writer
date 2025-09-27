@@ -228,22 +228,35 @@ export default function Dashboard() {
             <TabsTrigger value="blog" className="flex items-center gap-2">
               <FileText className="h-4 w-4" />
               PublicGoods
+              <Badge variant="secondary" className="ml-1">
+                {filteredCoins.filter(c => (c.metadata && 'type' in c.metadata && (c.metadata as any).type === 'blog')).length}
+              </Badge>
             </TabsTrigger>
             <TabsTrigger value="image" className="flex items-center gap-2">
               <Coins className="h-4 w-4" />   
               ImageCoins
+              <Badge variant="secondary" className="ml-1">
+                {filteredCoins.filter(c => (c.metadata && 'type' in c.metadata && (c.metadata as any).type === 'image')).length}
+              </Badge>
             </TabsTrigger>
             <TabsTrigger value="music" className="flex items-center gap-2">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-2v13" /><circle cx="6" cy="18" r="3" /><circle cx="18" cy="16" r="3" /></svg>
               MusicCoins
+              <Badge variant="secondary" className="ml-1">
+                {filteredCoins.filter(c => (c.metadata && 'type' in c.metadata && (c.metadata as any).type === 'music')).length}
+              </Badge>
             </TabsTrigger>
             <TabsTrigger value="video" className="flex items-center gap-2">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><rect x="3" y="7" width="18" height="13" rx="2" /><path d="M16 3v4" /><path d="M8 3v4" /></svg>
               VideoCoins
+              <Badge variant="secondary" className="ml-1">
+                {filteredCoins.filter(c => (c.metadata && 'type' in c.metadata && (c.metadata as any).type === 'video')).length}
+              </Badge>
             </TabsTrigger>
             <TabsTrigger value="channels" className="flex items-center gap-2">
               <TrendingUp className="h-4 w-4" />
               Channels
+              <Badge variant="secondary" className="ml-1">Coming soon</Badge>
             </TabsTrigger>
           <TabsContent value="channels" className="space-y-4">
             <div className="flex items-center justify-between">
@@ -254,10 +267,7 @@ export default function Dashboard() {
           </TabsContent>
           </TabsList>
           <TabsContent value="blog" className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-semibold">Publi Goods</h2>
-              <Badge variant="secondary">{filteredCoins.filter(c => (c.metadata && 'type' in c.metadata && (c.metadata as any).type === 'blog')).length} coins</Badge>
-            </div>
+            <h2 className="text-2xl font-semibold mb-2">Publi Goods</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {filteredCoins.filter(c => (c.metadata && 'type' in c.metadata && (c.metadata as any).type === 'blog')).map((coin) => (
                 <div key={coin.id} className="relative">
@@ -291,11 +301,8 @@ export default function Dashboard() {
             </div>
           </TabsContent>
           <TabsContent value="image" className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-semibold">Image Coins</h2>
-              <Badge variant="secondary">{filteredCoins.filter(c => (c.metadata && 'type' in c.metadata && (c.metadata as any).type === 'image')).length} coins</Badge>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <h2 className="text-2xl font-semibold mb-2">Image Coins</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {filteredCoins.filter(c => (c.metadata && 'type' in c.metadata && (c.metadata as any).type === 'image')).map((coin) => (
                 <div key={coin.id} className="relative">
                   <CoinCard 
@@ -328,10 +335,7 @@ export default function Dashboard() {
             </div>
           </TabsContent>
           <TabsContent value="music" className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-semibold">Music Coins</h2>
-              <Badge variant="secondary">{filteredCoins.filter(c => (c.metadata && 'type' in c.metadata && (c.metadata as any).type === 'music')).length} coins</Badge>
-            </div>
+            <h2 className="text-2xl font-semibold mb-2">Music Coins</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {filteredCoins.filter(c => (c.metadata && 'type' in c.metadata && (c.metadata as any).type === 'music')).map((coin) => (
                 <div key={coin.id} className="relative">
@@ -365,10 +369,7 @@ export default function Dashboard() {
             </div>
           </TabsContent>
           <TabsContent value="video" className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-semibold">Video Coins</h2>
-              <Badge variant="secondary">{filteredCoins.filter(c => (c.metadata && 'type' in c.metadata && (c.metadata as any).type === 'video')).length} coins</Badge>
-            </div>
+            <h2 className="text-2xl font-semibold mb-2">Video Coins</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {filteredCoins.filter(c => (c.metadata && 'type' in c.metadata && (c.metadata as any).type === 'video')).map((coin) => (
                 <div key={coin.id} className="relative">
